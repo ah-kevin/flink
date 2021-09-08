@@ -15,7 +15,8 @@ public class TransformationApp {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 //        map(env);
 //        flatMap(env);
-        keyBy(env);
+//        keyBy(env);
+        richMap(env);
         env.execute("TransformationApp");
     }
 
@@ -41,6 +42,12 @@ public class TransformationApp {
                 return access.getDomain();
             }
         }).sum("traffic").print();
+    }
+    public static void richMap(StreamExecutionEnvironment env) {
+        env.setParallelism(3);
+        DataStreamSource<String> source = env.readTextFile("data/access.log");
+        SingleOutputStreamOperator<Access> mapStream = source.map(new PKMapFunction());
+        mapStream.print();
     }
 
     public static void map(StreamExecutionEnvironment env) {
