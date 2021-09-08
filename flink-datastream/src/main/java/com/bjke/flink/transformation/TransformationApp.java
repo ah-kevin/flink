@@ -40,7 +40,7 @@ public class TransformationApp {
             public String getKey(Access access) throws Exception {
                 return access.getDomain();
             }
-        }).print();
+        }).sum("traffic").print();
     }
 
     public static void map(StreamExecutionEnvironment env) {
