@@ -62,6 +62,39 @@ public class RecordDetails {
         this.round = round;
     }
 
+    @Override
+    public String toString() {
+        return "RecordDetails{" +
+                "id='" + id + '\'' +
+                ", created_at='" + created_at + '\'' +
+                ", updated_at='" + updated_at + '\'' +
+                ", deleted_at='" + deleted_at + '\'' +
+                ", date='" + date + '\'' +
+                ", player_id='" + player_id + '\'' +
+                ", player_name='" + player_name + '\'' +
+                ", seat='" + seat + '\'' +
+                ", roleId='" + roleId + '\'' +
+                ", choose='" + choose + '\'' +
+                ", power_wolf='" + power_wolf + '\'' +
+                ", operation_id='" + operation_id + '\'' +
+                ", day='" + day + '\'' +
+                ", season_id='" + season_id + '\'' +
+                ", group='" + group + '\'' +
+                ", score='" + score + '\'' +
+                ", points='" + points + '\'' +
+                ", egg='" + egg + '\'' +
+                ", active_score='" + active_score + '\'' +
+                ", total='" + total + '\'' +
+                ", suicide='" + suicide + '\'' +
+                ", bottom='" + bottom + '\'' +
+                ", topVote='" + topVote + '\'' +
+                ", record_id='" + record_id + '\'' +
+                ", season_type_id='" + season_type_id + '\'' +
+                ", deaths_id='" + deaths_id + '\'' +
+                ", round='" + round + '\'' +
+                '}';
+    }
+
     public String getId() {
         return id;
     }
