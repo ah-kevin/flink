@@ -10,6 +10,7 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.CheckpointConfig;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
+import org.apache.flink.streaming.connectors.kafka.KafkaDeserializationSchema;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -83,4 +84,33 @@ public class FlinkUtils {
         System.out.println(groupId);
         System.out.println(servers);
     }
+
+    public static <T> DataStream<T> createKafkaStreamV3(String[] args, Class<? extends KafkaDeserializationSchema<T>> deserializer) throws Exception {
+        ParameterTool tool = ParameterTool.fromPropertiesFile(args[0]);
+        String groupId = tool.get("group.id", "test");
+        String servers = tool.getRequired("bootstrap.servers");
+        List<String> topics = Arrays.asList(tool.getRequired("kafka.input.topics").split(","));
+        String autoCommit = tool.get("enable.auto.commit", "false");
+        String offsetReset = tool.get("auto.offset.reset", "earliest");
+
+        int interval = tool.getInt("checkpoint.interval", 5000);
+        String checkpointFilePath = tool.getRequired("checkpoint.filePath");
+
+        // kafka相关参数
+        Properties properties = new Properties();
+        properties.setProperty("bootstrap.servers", servers);
+        properties.setProperty("group.id", groupId);
+        properties.setProperty("enable.auto.commit", autoCommit);
+        properties.setProperty("auto.offset.reset", offsetReset);
+
+        // checkPoint 参数
+        env.enableCheckpointing(interval);
+        env.setStateBackend(new FsStateBackend(checkpointFilePath));
+        env.getCheckpointConfig().enableExternalizedCheckpoints(CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
+        env.setRestartStrategy(RestartStrategies.fixedDelayRestart(2, Time.of(5, TimeUnit.SECONDS)));
+
+        FlinkKafkaConsumer<T> kafkaConsumer = new FlinkKafkaConsumer<>(topics, deserializer.newInstance(), properties);
+        return env.addSource(kafkaConsumer);
+    }
+
 }

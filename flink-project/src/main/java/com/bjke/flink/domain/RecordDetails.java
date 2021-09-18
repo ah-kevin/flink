@@ -28,6 +28,8 @@ public class RecordDetails {
     private String season_type_id;
     private String deaths_id;
     private String round;
+    public String dateDay;
+    public String hour;
 
     public RecordDetails() {
     }
@@ -92,6 +94,8 @@ public class RecordDetails {
                 ", season_type_id='" + season_type_id + '\'' +
                 ", deaths_id='" + deaths_id + '\'' +
                 ", round='" + round + '\'' +
+                ", dateDay='" + dateDay + '\'' +
+                ", hour='" + hour + '\'' +
                 '}';
     }
 
